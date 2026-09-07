@@ -1,40 +1,35 @@
+import { useEffect, useState } from "react";
 import ProductItem from "./components/ProductItem";
 
+interface IProduct {
+  id: string;
+  title: string;
+  category: string;
+  price: number;
+  thumbnail: string;
+}
+
 export default function ProductsPage() {
-  const products = [
-    {
-      thumbnail:
-        "https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-01.jpg",
-      alt: "Front of men's Basic Tee in black.",
-      title: "Basic Tee",
-      price: 35,
-      color: "Black",
-    },
-    {
-      thumbnail:
-        "https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-02.jpg",
-      alt: "Front of men's Basic Tee in white.",
-      title: "Basic Tee",
-      price: 35,
-      color: "Aspen White",
-    },
-    {
-      thumbnail:
-        "https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-03.jpg",
-      alt: "Front of men's Basic Tee in dark gray.",
-      title: "Basic Tee",
-      price: 35,
-      color: "Charcoal",
-    },
-    {
-      thumbnail:
-        "https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-04.jpg",
-      alt: "Front of men's Artwork Tee in peach with white and brown dots forming an isometric cube.",
-      title: "Artwork Tee",
-      price: 35,
-      color: "Iso Dots",
-    },
-  ];
+  const [products, setProducts] = useState<IProduct[]>([]);
+
+  const productUrl = "https://dummyjson.com/products";
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(productUrl);
+      const data = await response.json();
+
+      const products = data.products as IProduct[];
+      setProducts(products);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   return (
     <div className="bg-white">
@@ -49,8 +44,8 @@ export default function ProductsPage() {
               title={product.title}
               thumbnail={product.thumbnail}
               price={product.price}
-              color={product.color}
-              alt={product.alt}
+              color={product.category}
+              alt={product.title}
               key={index}
             />
           ))}
