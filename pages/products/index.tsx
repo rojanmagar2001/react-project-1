@@ -11,11 +11,14 @@ interface IProduct {
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<IProduct[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const productUrl = "https://dummyjson.com/products";
 
   const fetchProducts = async () => {
     try {
+      setIsLoading(true);
       const response = await fetch(productUrl);
       const data = await response.json();
 
@@ -23,7 +26,9 @@ export default function ProductsPage() {
       setProducts(products);
     } catch (error) {
       console.error("Error fetching products:", error);
-      throw error;
+      setError("Failed to fetch products. Please try again later.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -38,18 +43,24 @@ export default function ProductsPage() {
           Products Listing
         </h2>
 
-        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {products.map((product, index) => (
-            <ProductItem
-              title={product.title}
-              thumbnail={product.thumbnail}
-              price={product.price}
-              color={product.category}
-              alt={product.title}
-              key={index}
-            />
-          ))}
-        </div>
+        {isLoading ? (
+          <p className="text-gray-700">Loading...</p>
+        ) : error ? (
+          <p className="text-red-500">Error: {error}</p>
+        ) : (
+          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+            {products.map((product, index) => (
+              <ProductItem
+                title={product.title}
+                thumbnail={product.thumbnail}
+                price={product.price}
+                color={product.category}
+                alt={product.title}
+                key={index}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

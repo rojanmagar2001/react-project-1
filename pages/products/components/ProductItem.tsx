@@ -30,7 +30,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
               {title}
             </a>
           </h3>
-          <p className="mt-1 text-sm text-gray-500">{color}</p>
+          <p className="mt-1 text-sm text-gray-500 capitalize">{color}</p>
         </div>
         <p className="text-sm font-medium text-gray-900">${price}</p>
       </div>
